@@ -1,6 +1,6 @@
 FROM node:16-alpine3.15 as builder
 
-ARG DB_TYPE=postgresql
+ARG DB_TYPE=pgsql
 ENV DB_TYPE=$DB_TYPE
 
 RUN apk add --no-cache python3 py3-pip make gcc g++
@@ -18,7 +18,7 @@ RUN npm run build:without-migrate
 FROM node:16-alpine3.15 as runner
 
 ENV NODE_ENV=production
-ARG DB_TYPE=postgresql
+ARG DB_TYPE=pgsql
 ENV DB_TYPE=$DB_TYPE
 
 WORKDIR /app
