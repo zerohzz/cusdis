@@ -29,4 +29,4 @@ COPY . /app
 
 EXPOSE 3000
 
-CMD node_modules/.bin/next start
+CMD npx prisma migrate deploy --schema ./prisma/$DB_TYPE/schema.prisma && node_modules/.bin/next start
