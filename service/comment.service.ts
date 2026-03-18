@@ -186,6 +186,7 @@ export class CommentService extends RequestScopeService {
         by_nickname: body.nickname,
         pageId: page.id,
         parentId,
+        approved: true,
       },
     })
 
