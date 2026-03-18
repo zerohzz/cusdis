@@ -89,36 +89,52 @@
     getComments()
   })
 
+  $: hasComments = commentsResult && commentsResult.data && commentsResult.data.length > 0
+  $: commentCount = commentsResult ? commentsResult.data.length : 0
+
 </script>
 
 {#if !error}
   <div class:dark={theme === 'dark'}>
     {#if message}
-      <div class="p-2 mb-4 bg-blue-500 text-white">
+      <div class="p-2 mb-4 bg-blue-500 text-white cusdis-message">
         {message}
       </div>
     {/if}
 
-    <Reply />
+    <!-- Anchor jump link: only shown when there are comments to scroll past -->
+    {#if hasComments}
+      <div class="mb-4 px-1">
+        <a href="#cusdis-reply-form" class="cusdis-jump-link text-sm text-gray-400 dark:text-gray-500 underline underline-offset-2 hover:text-gray-600 dark:hover:text-gray-300">
+          {t('jump_to_form')}
+        </a>
+      </div>
+    {/if}
 
-    <div class="my-8" />
-
-    <div class="mt-4 px-1">
+    <!-- Comment list -->
+    <div class="px-1">
       {#if loadingComments}
         <div class="text-gray-400 dark:text-gray-400 text-sm">{t('loading')}...</div>
-      {:else if commentsResult.data.length === 0}
-        <div class="text-center py-8 text-gray-400 dark:text-gray-500 text-sm">
-          💬 Be the first to comment!
+      {:else if !hasComments}
+        <div class="text-center py-8 text-gray-400 dark:text-gray-500 text-sm cusdis-empty-state">
+          {t('empty_state')}
         </div>
       {:else}
-        <div class="text-xs text-gray-400 mb-4 uppercase tracking-wider font-medium">
-          {commentsResult.data.length} comment{commentsResult.data.length !== 1 ? 's' : ''}
+        <!-- Section divider: N comments -->
+        <div class="flex items-center gap-3 mb-6">
+          <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
+          <span class="text-xs text-gray-400 dark:text-gray-500 font-medium tracking-wide">
+            {commentCount} {commentCount === 1 ? 'comment' : 'comments'}
+          </span>
+          <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
         </div>
+
         {#each commentsResult.data as comment (comment.id)}
           <Comment {comment} firstFloor={true} />
         {/each}
+
         {#if commentsResult.pageCount > 1}
-          <div>
+          <div class="mt-4">
             {#each Array(commentsResult.pageCount) as _, index}
               <button
                 class="px-2 py-1 text-sm mr-2 dark:text-gray-200"
@@ -131,10 +147,36 @@
       {/if}
     </div>
 
-    <div class="my-8" />
-
-    <div class="text-center text-gray-500 dark:text-gray-100 text-xs">
-      <a class="underline " href="https://cusdis.com">{t('powered_by')}</a>
+    <!-- Reply form (below comments) -->
+    <div class="mt-8 px-1" id="cusdis-reply-form">
+      <div class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-4">
+        {t('leave_a_comment')}
+      </div>
+      <Reply />
     </div>
+
+    <div class="my-6" />
   </div>
 {/if}
+
+<style>
+  .cusdis-empty-state {
+    animation: cusdis-fadein 300ms ease-out;
+  }
+
+  .cusdis-message {
+    animation: cusdis-fadein 200ms ease-out;
+  }
+
+  @keyframes cusdis-fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cusdis-empty-state,
+    .cusdis-message {
+      animation: none;
+    }
+  }
+</style>
