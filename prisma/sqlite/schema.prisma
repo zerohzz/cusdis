@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DB_URL")
+  provider = "postgresql"
+url      = env("DB_URL")
 }
 
 generator client {
