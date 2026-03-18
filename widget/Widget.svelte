@@ -105,10 +105,15 @@
 
     <div class="mt-4 px-1">
       {#if loadingComments}
-        <div class="text-gray-900 dark:text-gray-100">
-          {t('loading')}...
+        <div class="text-gray-400 dark:text-gray-400 text-sm">{t('loading')}...</div>
+      {:else if commentsResult.data.length === 0}
+        <div class="text-center py-8 text-gray-400 dark:text-gray-500 text-sm">
+          💬 Be the first to comment!
         </div>
       {:else}
+        <div class="text-xs text-gray-400 mb-4 uppercase tracking-wider font-medium">
+          {commentsResult.data.length} comment{commentsResult.data.length !== 1 ? 's' : ''}
+        </div>
         {#each commentsResult.data as comment (comment.id)}
           <Comment {comment} firstFloor={true} />
         {/each}

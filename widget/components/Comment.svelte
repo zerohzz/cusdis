@@ -9,13 +9,23 @@
 
   const { showIndicator } = getContext('attrs')
 
+  // #7: relative timestamp
+  function timeAgo(dateStr) {
+    const d = new Date(dateStr)
+    const now = new Date()
+    const diff = Math.floor((now - d) / 1000)
+    if (diff < 60) return 'just now'
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
+    if (diff < 2592000) return `${Math.floor(diff / 86400)}d ago`
+    return d.toLocaleDateString()
+  }
 </script>
 
+<!-- #5 + #6: card style + accent left border for children -->
 <div
-  class="my-4"
-  class:pl-4={isChild}
-  class:border-l-2={isChild}
-  class:border-color-gray-200={isChild}
+  class="my-3 p-4 rounded-lg border border-gray-100 bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
+  class:cusdis-child={isChild}
   class:cusdis-indicator={showIndicator}
 >
   <div class="flex items-center">
@@ -24,14 +34,16 @@
     </div>
 
     {#if comment.moderatorId}
-      <div class="mr-2 dark:bg-gray-500 bg-gray-200 text-xs py-0.5 px-1 rounded dark:text-gray-100">
+      <!-- #8: accent MOD badge -->
+      <div class="mr-2 text-xs font-medium rounded-full" style="background-color: #AF8F6F; color: white; padding: 2px 8px; font-size: 0.65rem; letter-spacing: 0.05em;">
         <span>{t('mod_badge')}</span>
       </div>
     {/if}
   </div>
 
-  <div class="text-gray-500 text-sm dark:text-gray-400">
-    {comment.parsedCreatedAt}
+  <!-- #7: relative time with full date on hover -->
+  <div class="text-gray-500 text-sm dark:text-gray-400" title={comment.parsedCreatedAt}>
+    {timeAgo(comment.createdAt)}
   </div>
 
   <div class="text-gray-500 my-2 dark:text-gray-200">
@@ -54,9 +66,8 @@
     >
   </div>
 
-
   {#if showReplyForm}
-    <div class="mt-4 pl-4 border-l-2 border-gray-200">
+    <div class="mt-4">
       <Reply
         parentId={comment.id}
         onSuccess={() => {
@@ -65,6 +76,12 @@
       />
     </div>
   {/if}
-
-
 </div>
+
+<style>
+  /* #6: accent left border for nested replies */
+  .cusdis-child {
+    border-left: 3px solid #AF8F6F !important;
+    margin-left: 1rem;
+  }
+</style>

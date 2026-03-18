@@ -1,10 +1,6 @@
-import path from 'path'
-import { fileURLToPath } from 'url'
-import svelte from 'rollup-plugin-svelte'
+const path = require('path')
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-
-export default {
+module.exports = {
   root: 'widget',
   build: {
     lib: {
@@ -14,7 +10,7 @@ export default {
     outDir: path.resolve(__dirname, '..', 'public', 'js'),
   },
   plugins: [
-    svelte({
+    require('rollup-plugin-svelte')({
       emitCss: false,
     }),
   ],

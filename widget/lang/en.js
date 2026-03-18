@@ -6,7 +6,7 @@ export default {
   // comment
   email: 'Email (optional)',
   nickname: 'Nickname',
-  reply_placeholder: 'Reply...',
+  reply_placeholder: 'Write a comment...',
   reply_btn: 'Reply',
   sending: 'sending...',
 
